@@ -6,22 +6,23 @@ This Python program uses data of forged parts from a stereo camera to analyze th
 	or download the diretory
 
 # Installation for windows 
-All inserted rows are terminal commands and should copied in the terminal.
 
 1. install Python 3.11
 
 3. open a console/terminal in the Stereo_camera_programm
 
 2. create a Virtual Environment\
-	python3.11 -m venv venv
+
+python3.11 -m venv venv
 
 3. Activate the Virtual Environment\ 
-	venv\Scripts\Activate.ps1\
-info: after the comand in front of the line should appear a (venv)\
+
+venv\Scripts\Activate.ps1 \
+info: after the comand in front of the line should appear a (venv) \
 exmaple : (venv) (base) PS C:\LUH\test>
 
-4. Install Dependencies
-	pip install -r requirements.txt
+4. Install Dependencies\
+pip install -r requirements.txt
 
 # Start programm
 	
