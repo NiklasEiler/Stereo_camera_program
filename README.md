@@ -1,6 +1,5 @@
 # Stereo_camera_program
-This Python program uses data from a stereo camera to analyze the images and the point cloud to estimate the height and features of the forged part. For that, it uses a U-net for the global binarisation and a hough transformation to find the middle of the part. As classifiers, it uses a random forest and a support vector machine. Moreover, it uses DBSCAN and k-means to find the heights of the part.
-
+This Python program uses data of forged parts from a stereo camera to analyze the images and the point cloud to estimate the height and features of the forged part. For that, it uses a U-net for the global binarisation and a hough transformation to find the middle of the part. As classifiers, it uses a random forest and a support vector machine. Moreover, it uses DBSCAN and k-means to find the heights of the part.
 
 # Downloading the git reposetorie
 	git clone https://github.com/NiklasEiler/Stereo_camera_program.git
@@ -21,7 +20,7 @@ All inserted rows are terminal commands and should copied in the terminal.
 info: after the comand in front of the line should appear a (venv)
 exmaple : (venv) (base) PS C:\LUH\test>
 
-4.Install Dependencies
+4. Install Dependencies
 	pip install -r requirements.txt
 
 # Start programm
