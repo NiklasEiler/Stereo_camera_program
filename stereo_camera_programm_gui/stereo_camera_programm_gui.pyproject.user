@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 12.0.1, 2024-04-26T19:25:36. -->
+<!-- Written by QtCreator 12.0.1, 2024-04-28T22:46:57. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -149,7 +149,6 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/LUH/Master/Masterarbeit/Stereo_camera_program/stereo_camera_programm_gui/widget.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/LUH/Master/Masterarbeit/Stereo_camera_program/stereo_camera_programm_gui/widget.py</value>
     <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{1d82c392-0686-4cef-a3f4-950b93144b93}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\LUH\Master\Masterarbeit\Stereo_camera_program\stereo_camera_programm_gui\widget.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>

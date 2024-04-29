@@ -43,7 +43,7 @@ def find_high(n, speichern=False,histoz_vis= False, pc_vis=False):
             threshold_y=0.05
             mask_y = filtered_data[:, 1] <= threshold_y
             filtered_data = filtered_data[mask_y]
-
+            crop_pc=filtered_data.copy()
             
             
 
@@ -71,7 +71,7 @@ def find_high(n, speichern=False,histoz_vis= False, pc_vis=False):
             filtered_data = filtered_data[mask_z]
 
             
-            
+            without_ground=filtered_data.copy()
             tmp = filtered_data.copy()
             
             mask_mod1= tmp[:,2] <= np.min(tmp[:,2]) + 0.001
@@ -114,8 +114,7 @@ def find_high(n, speichern=False,histoz_vis= False, pc_vis=False):
                     var_y[j]=np.var(tmp[labels==j][:,1])
                     var[j] = np.linalg.norm([var_x, var_y])
                     
-                    #pointcloud = numpy_array_to_pointcloud(tmp[labels==j])
-                    #o3d.visualization.draw_geometries([pointcloud])
+                    
 
                 
                 choosen_cluster= np.argmax(var) 
@@ -127,10 +126,7 @@ def find_high(n, speichern=False,histoz_vis= False, pc_vis=False):
                 indices_to_keep = [i for i, row in enumerate(test_1) if row not in test_2]
                             
                 
-                #pointcloud = numpy_array_to_pointcloud(filtered_data)
-                #o3d.visualization.draw_geometries([pointcloud])
-                #pointcloud = numpy_array_to_pointcloud(filtered_data[indices_to_keep])
-                #o3d.visualization.draw_geometries([pointcloud])
+                
             
                 
                     
@@ -183,7 +179,8 @@ def find_high(n, speichern=False,histoz_vis= False, pc_vis=False):
             df.to_excel('höhe_data.xlsx')
             del high
             print('save')
-            
+
+    return crop_pc, without_ground 
 
 if __name__ == "__main__":
     find_high(690, speichern=True ,histoz_vis= False, pc_vis=False )

@@ -350,9 +350,7 @@ def adjust_column_width(file_path):
     # Save the modified workbook
     wb.save(filename=file_path)
 
-def main():
-    x=650 #680
-    y=400 #380
+def main(x=650, y=400):
     img_path= os.path.abspath(os.getcwd()) + '/Messung'
     save_path= os.path.abspath(os.getcwd()) + '/Messung'
     folder_path= save_path + "/Ergebnisse"

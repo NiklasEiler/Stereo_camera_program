@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Widget</string>
+   <string>GUI</string>
   </property>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -32,20 +32,20 @@
     <widget class="QCheckBox" name="del_bottom">
      <property name="geometry">
       <rect>
-       <x>540</x>
+       <x>490</x>
        <y>220</y>
-       <width>78</width>
-       <height>22</height>
+       <width>271</width>
+       <height>21</height>
       </rect>
      </property>
      <property name="text">
-      <string>Untergrund entfernen</string>
+      <string>Untergrund in der Region of Interest entfernen</string>
      </property>
     </widget>
     <widget class="QCheckBox" name="del_upper">
      <property name="geometry">
       <rect>
-       <x>540</x>
+       <x>490</x>
        <y>260</y>
        <width>151</width>
        <height>22</height>
@@ -58,7 +58,7 @@
     <widget class="QCheckBox" name="del_dorn">
      <property name="geometry">
       <rect>
-       <x>540</x>
+       <x>490</x>
        <y>300</y>
        <width>111</width>
        <height>22</height>
@@ -71,20 +71,20 @@
     <widget class="QCheckBox" name="rest">
      <property name="geometry">
       <rect>
-       <x>540</x>
+       <x>490</x>
        <y>340</y>
-       <width>121</width>
+       <width>301</width>
        <height>22</height>
       </rect>
      </property>
      <property name="text">
-      <string>Rest entfernen</string>
+      <string>Dorn und Obereschicht behalten und Rest entfernen</string>
      </property>
     </widget>
     <widget class="QCheckBox" name="rog">
      <property name="geometry">
       <rect>
-       <x>540</x>
+       <x>490</x>
        <y>180</y>
        <width>221</width>
        <height>22</height>
@@ -94,7 +94,7 @@
       <string>Zugeschnitten auf Region of Interrest</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="iph_logo_2">
      <property name="geometry">
       <rect>
        <x>640</x>
@@ -116,20 +116,20 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="choose_pc">
+    <widget class="QPushButton" name="refresch">
      <property name="geometry">
       <rect>
-       <x>140</x>
-       <y>240</y>
+       <x>110</x>
+       <y>70</y>
        <width>211</width>
        <height>81</height>
       </rect>
      </property>
      <property name="text">
-      <string>Auswahl der Punktwolke</string>
+      <string>Aktualesieren</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="refresh">
+    <widget class="QPushButton" name="execut_pc_pro">
      <property name="geometry">
       <rect>
        <x>540</x>
@@ -142,12 +142,35 @@
       <string>Anwenden</string>
      </property>
     </widget>
+    <widget class="QListWidget" name="pc_file_list">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>160</y>
+       <width>256</width>
+       <height>351</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="choosen_pc_file">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>520</y>
+       <width>241</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Ausgewählt ist 176.csv</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="tab_2">
     <attribute name="title">
      <string>Datenverarbeitung</string>
     </attribute>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="start_bt">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -185,7 +208,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="iph_logo_1">
      <property name="geometry">
       <rect>
        <x>640</x>
@@ -226,30 +249,75 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QSlider" name="x_koor">
+    <widget class="QLabel" name="crop_img">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>60</y>
+       <width>281</width>
+       <height>241</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+     <property name="pixmap">
+      <pixmap>../../stereocamera_mesurment/Daten/crop/crop1.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="x_crop_value">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>330</y>
+       <width>49</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>x:650</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="y_crop_value">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>360</y>
+       <width>49</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>y: 600</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="x_input_value">
      <property name="geometry">
       <rect>
        <x>70</x>
        <y>330</y>
-       <width>160</width>
-       <height>16</height>
+       <width>113</width>
+       <height>24</height>
       </rect>
      </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
     </widget>
-    <widget class="QSlider" name="horizontalSlider_2">
+    <widget class="QLineEdit" name="y_input_value">
      <property name="geometry">
       <rect>
        <x>70</x>
-       <y>370</y>
-       <width>160</width>
-       <height>16</height>
+       <y>360</y>
+       <width>113</width>
+       <height>24</height>
       </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </widget>
