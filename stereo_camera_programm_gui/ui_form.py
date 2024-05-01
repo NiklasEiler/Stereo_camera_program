@@ -105,7 +105,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -142,7 +142,7 @@ class Ui_Widget(object):
         self.label_3.setText("")
         self.crop_img.setText("")
         self.x_crop_value.setText(QCoreApplication.translate("Widget", u"x:650", None))
-        self.y_crop_value.setText(QCoreApplication.translate("Widget", u"y: 600", None))
+        self.y_crop_value.setText(QCoreApplication.translate("Widget", u"y: 400", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("Widget", u"Datenverarbeitung", None))
     # retranslateUi
 

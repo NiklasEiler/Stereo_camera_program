@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -297,7 +297,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
       </rect>
      </property>
      <property name="text">
-      <string>y: 600</string>
+      <string>y: 400</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="x_input_value">

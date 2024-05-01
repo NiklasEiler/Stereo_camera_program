@@ -1,5 +1,11 @@
 {
     "python.analysis.autoImportCompletions": true,
     "python.analysis.typeCheckingMode": "basic",
-    "cmake.sourceDirectory": "C:/LUH/Master/Masterarbeit/Programm/rc_visard_opencv_example-master/rc_visard_opencv_example"
+    "cmake.sourceDirectory": "C:/LUH/Master/Masterarbeit/Programm/rc_visard_opencv_example-master/rc_visard_opencv_example",
+    "files.associations": {
+        "*.rmd": "markdown",
+        "*.inc": "c",
+        "chrono": "c",
+        "xlocale": "c"
+    }
 }
