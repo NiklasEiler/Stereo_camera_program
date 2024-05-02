@@ -23,6 +23,6 @@ int main() {
     } else {
         perror("getcwd() error");
     }
-    //system("c:/LUH/Master/Masterarbeit/Stereo_camera_program/.venv/Scripts/python.exe c:/LUH/Master/Masterarbeit/Stereo_camera_program/gui.py");
+    sleep(60);
 }
 
