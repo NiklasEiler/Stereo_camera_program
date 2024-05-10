@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
+//this programm start the venv and the gui programm
 
 int main() {
-    char cwd[1024]; // Buffer to store the current directory path
+    char cwd[1024]; 
 
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
         char python_str[] = "/.venv/Scripts/python.exe";

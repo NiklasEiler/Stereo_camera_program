@@ -9,6 +9,7 @@ from scipy.stats import mode
 import shutil
 tf.get_logger().setLevel('ERROR')
 
+#Modell laden
 seg_unet = tf.keras.models.load_model('segmentation.keras',  custom_objects={'Lambda': tf.keras.layers.Lambda}, safe_mode=False)
 count= 1
 class Bildverarbeitung:

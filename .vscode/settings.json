@@ -6,6 +6,8 @@
         "*.rmd": "markdown",
         "*.inc": "c",
         "chrono": "c",
-        "xlocale": "c"
+        "xlocale": "c",
+        "stdlib.h": "c",
+        "stdio.h": "c"
     }
 }

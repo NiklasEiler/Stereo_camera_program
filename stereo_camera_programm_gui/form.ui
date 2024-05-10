@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -126,7 +126,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Aktualesieren</string>
+      <string>Aktualisieren</string>
      </property>
     </widget>
     <widget class="QPushButton" name="execut_pc_pro">

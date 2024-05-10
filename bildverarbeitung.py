@@ -4,11 +4,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import re
-#os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-#import tensorflow as tf
 from scipy.stats import mode
 
-#autoencoder = tf.keras.models.load_model('autoencoder10_16_model.keras')
 count= 1
 class Bildverarbeitung:
     def __init__(self, Img):
@@ -28,7 +25,7 @@ class Bildverarbeitung:
         self.imgbin = np.zeros_like(self.crop)
         self.imgregion = np.zeros_like(self.crop)
         
-
+        #zwischen Bilder
         self.emty = np.zeros_like(self.crop)
         self.countur_img = cv2.cvtColor(self.crop, cv2.COLOR_GRAY2BGR)
         self.aussenkontur_img = np.zeros_like(self.crop)
@@ -58,7 +55,6 @@ class Bildverarbeitung:
         # Error
         self.error = "Erros: "
         
-
     def binar(self, vis=False): 
         global count
         rio= self.crop.copy()
@@ -74,23 +70,21 @@ class Bildverarbeitung:
         #Bin 
         ret, self.imgbin = cv2.threshold(cv2.bitwise_not(rio), 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
         
+        # Dimand Kernel
         size = 5
         kernel = np.zeros((size, size), dtype=np.uint8)
-        
         # Define the center of the kernel
-        center = size // 2
-
-        # Set the diamond shape
+        center = size // 2        
         for i in range(size):
             for j in range(size):
                 if abs(i - center) + abs(j - center) <= center:
                     kernel[i, j] = 1
 
-        # Perform dilation followed by erosion
+        #dilation und erosion
         self.imgbin = cv2.morphologyEx(self.imgbin, cv2.MORPH_OPEN, kernel)
         self.imgbin = cv2.morphologyEx(self.imgbin, cv2.MORPH_CLOSE, kernel)
 
-
+        #Konturfilter
         contours, _ = cv2.findContours(self.imgbin, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         # Iteriere durch die Konturen und filtere Regionen basierend auf der Fläche
@@ -105,7 +99,7 @@ class Bildverarbeitung:
                                      contour], 0, 255, thickness=cv2.FILLED)
         
         
-        
+        #maske nutzen um Hintergrund wegzuschneiden
         self.imgclean[self.imgregion == 0] = 255
 
         if vis:
@@ -117,6 +111,7 @@ class Bildverarbeitung:
             cv2.imshow("clean", self.imgclean)
             cv2.waitKey(0)
 
+        #Berechnung von Eigenschaftejn
         area = cv2.contourArea(contour)
         perimeter = cv2.arcLength(contour, True)
             
@@ -124,14 +119,12 @@ class Bildverarbeitung:
         self.data[0] = cv2.countNonZero(self.imgregion)
         self.data[7] = roundness
         self.data[8] = perimeter
-    
-
-        
+         
     def flaechen_mittelpunkt(self):
         # Berechne den gewichteten Durchschnitt der Koordinaten
         Mr = cv2.moments(self.imgregion)
 
-        # Koordinaten berechnen uznd in Kounturbild einfügen
+        # Koordinaten berechnen und in Kounturbild einfügen
         try:
             self.flaechemittekoor[0] = int(Mr["m10"] / Mr["m00"])
             self.flaechemittekoor[1] = int(Mr["m01"] / Mr["m00"])
@@ -147,19 +140,23 @@ class Bildverarbeitung:
             self.error = self.error + ", Flächenmitte nicht gefunden"
 
     def aussenkontur(self, vis= False):
+        #Kreuzkernel
         kernel_size = 3
         kernel = np.zeros((kernel_size, kernel_size), dtype=np.uint8)
         center = kernel_size // 2
         kernel[:, center] = 1
         kernel[center, :] = 1
-
+        
+        #Dilatation und Erosion auf globales Binärbild
         img_erosion = cv2.erode(self.imgregion, kernel, iterations=1)
         img_dilation = cv2.dilate(self.imgregion, kernel, iterations=1)
         self.aussenkontur_img = cv2.subtract(img_dilation, img_erosion)
+        #Kontur finden
         contours, _ = cv2.findContours(
             self.aussenkontur_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cv2.drawContours(self.countur_img, contours, -1, (45, 38, 161), 2)   	
         
+        #Wenn Kontur gefunden maximalen Radius und länge bestimmen
         if len(contours) != 0:
             perimeter = cv2.arcLength(contours[0], True)
             self.max_radius = perimeter/(2*np.pi)
@@ -169,7 +166,9 @@ class Bildverarbeitung:
             cv2.waitKey(0)
 
     def mittelpunktzuaussen(self):
+        #Kontur finden
         countur_aussen, _ =cv2.findContours( self.aussenkontur_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        #Gratabstand Matrix defenieren
         dis_grad= np.zeros((np.shape(countur_aussen)[1],3))
         
         #Koordinaten zuordnen
@@ -185,6 +184,7 @@ class Bildverarbeitung:
         dis_grad[:,2] = np.linalg.norm(delta_d, ord=None, axis=0, keepdims=False)
         max_grad=dis_grad[dis_grad[:,2]==max(dis_grad[:,2])][0]
         
+        #Eigenschaften berechnen
         self.data[1]= np.max(dis_grad[2])
         self.data[2]= np.min(dis_grad[2])
         
@@ -192,6 +192,7 @@ class Bildverarbeitung:
         self.data[4]= np.mean(dis_grad[2])
         self.data[5]= np.median(dis_grad[2])
         self.data[6]= mode(dis_grad[2]).mode
+
         return dis_grad, max_grad
 
     def bauteil_mitte(self):
@@ -343,7 +344,7 @@ class Bildverarbeitung:
                 if c[2] > 48 and c[2] < 54:
                     self.data[21] = 1  
                 
-
+            #Bauteilmitte berechnen
             y = int(np.mean(no_outliers[:, 1]))
             x = int(np.mean(no_outliers[:, 0]))
             self.mittekoor = np.array((y, x))
@@ -364,10 +365,13 @@ class Bildverarbeitung:
         del mp, no_outliers
 
     def weisserstrich_finden(self):
+        #Hintergrunf entfernen
         self.weisserstrich[self.imgregion == 0] = 0
+        #Tolranzband des Weißbereiches
         max=np.max(self.weisserstrich)-15
+        #wenn nicht weiß genug nicht Detektieren
         if max>230:
-            
+            #Binärbild der weißen Bereiche
             _, self.weisserstrich  = cv2.threshold(self.weisserstrich, max, 255, cv2.THRESH_BINARY)
             # Berechne den gewichteten Durchschnitt der Koordinaten
             Mr = cv2.moments(self.weisserstrich)
@@ -375,21 +379,24 @@ class Bildverarbeitung:
             
 
             if Mr["m01"]!=0 and  Mr["m10"] !=0 and Mr["m00"] !=0: 
+                #Koordinaten Weißen Striches berechnen
                 self.weisserstrichkoor[0] = int(Mr["m10"] / Mr["m00"])
                 self.weisserstrichkoor[1] = int(Mr["m01"] / Mr["m00"])
                 self.data[13]=self.weisserstrichkoor[0]
                 self.data[14]=self.weisserstrichkoor[1]
+                #Abstände berechnen
                 self.data[16]= np.linalg.norm(np.array((self.mittekoor[1],self.mittekoor[0])) -self.weisserstrichkoor)
                 self.data[17]= np.linalg.norm(self.weisserstrichkoor -self.flaechemittekoor)
                 size = 10
                 thickness = 3
                 
+                #In Bildverarbeitungsvisualisierung einzeichnen
                 cv2.line(self.countur_img, (int(self.weisserstrichkoor[0] - size/2), int(self.weisserstrichkoor[1])), (int(
                     self.weisserstrichkoor[0] + size/2), int(self.weisserstrichkoor[1])), (255, 50, 255), thickness)
                 cv2.line(self.countur_img, (int(self.weisserstrichkoor[0]), int(self.weisserstrichkoor[1] - size/2)), (int(
                     self.weisserstrichkoor[0]), int(self.weisserstrichkoor[1] + size/2)), (255, 50, 255), thickness)
                 
-                #cv2.imshow('weiss', self.weisserstrich)
+                #Vektoren erstellen
                 vec_g=np.zeros_like(self.weisserstrichkoor)
                 temp= cv2.cvtColor(self.weisserstrich, cv2.COLOR_GRAY2BGR)
                 vec_w=self.weisserstrichkoor-self.mittekoor
@@ -397,30 +404,24 @@ class Bildverarbeitung:
                 vec_g[0]=self.max_grad[1]-self.mittekoor[0]
                 vec_g[1]=self.max_grad[0]-self.mittekoor[1]
 
+                #Winkel berechnen
                 self.data[18]=self.angle_between_vectors(vec_w, vec_g)
-                #print()
-              
-                    
-                #cv2.imshow('vec0', temp)
-                #cv2.waitKey(0)
 
             else:
                 self.error = self.error + ", Weisserstrich nicht gefunden"
         else:
             self.error = self.error + ", Weisserstrich nicht gefunden"
-
-        #v_aussenmitte= self.mittekoor - self.max_grad[0:1]
-        #print(v_aussenmitte)
         
     def reduce_shadows(self, alpha, beta):
-        # Increase the image contrast
+        # KKontrast erhöhen
         adjusted_image = cv2.convertScaleAbs(self.img, alpha=alpha, beta=beta)
 
-        # Clip pixel values to be in the valid range [0, 255]
+        # Wert auf 0 bis 255 ziehen
         self.img_shadow_re = np.clip(adjusted_image, 0, 255)
         self.img = self.img_shadow_re.copy()
 
     def angle_between_vectors(self,v1, v2):
+        #berechnung des winkels mittels Punktprodukt Formel
         dot_product = np.dot(v1, v2)
         magnitude_v1 = np.linalg.norm(v1)
         magnitude_v2 = np.linalg.norm(v2)
@@ -443,12 +444,14 @@ class Bildverarbeitung:
         plt.show()
 
 def natural_sort_key(s):
-    # Regular expression to split the string into numeric and non-numeric parts
+    # Regulärer Ausdruck zur Aufteilung der Zeichenkette in numerische und nicht-numerische Teile
     return [int(text) if text.isdigit() else text.lower() for text in re.split(r'(\d+)', s)]
 
 def image_it( image_folder, filename, speicher_img=False, vis=False, speichern_data=False):
+    #bild laden
     img = cv2.imread(image_folder +'/'+ filename)
     img = Bildverarbeitung(img)
+    #Bildverarbeitung schritte durch gehen
     try:
         img.reduce_shadows(1.2, 5) 
     except:
@@ -481,14 +484,19 @@ def image_it( image_folder, filename, speicher_img=False, vis=False, speichern_d
         cv2.imwrite('Bildverarbeitungtest/normal/' + filename + '.png',img.countur_img)
     
 def main():
+    #Bildordner vorgeben
     image_folder="C:/LUH/Master/Masterarbeit/Stereo_camera_program/Daten/glueh/r"
+    #Ausgabe von Bildordner zur Überprufung
     print(os.listdir(image_folder))
+    #Iteration durch alle Dateien
     for filename in sorted(os.listdir(image_folder), key=natural_sort_key): 
-        
+        #Bild Datei erkennen
         if filename.endswith('.jpg') or filename.endswith('.png'):
+            #Bild laden zur überprüfung and path zusammen setzen
             image_path = os.path.join(image_folder, filename)
             image = cv2.imread(image_path)
 
+            #Wenn bild da Bildverarbeitung ausführen
             if image is not None:
                 print('###################################' + filename + '########################################')
                 image_it(image_folder, filename, vis=False, speicher_img=True, speichern_data=False)
@@ -496,13 +504,5 @@ def main():
             else:
                 print('Bild ' + filename + " nicht gefunden")
     
-
-            
-            
-        
-
-        
-
 if __name__ == '__main__':
-
     main()

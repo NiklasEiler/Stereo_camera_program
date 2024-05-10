@@ -45,10 +45,6 @@ def find_high(n, speichern=False,histoz_vis= False, pc_vis=False):
             filtered_data = filtered_data[mask_y]
             crop_pc=filtered_data.copy()
             
-            
-
-            
-
             # KMeans Cluster on z values to finde ground 
             z_data = filtered_data[:,2]
             n_clusters = 2
@@ -92,14 +88,6 @@ def find_high(n, speichern=False,histoz_vis= False, pc_vis=False):
             
             u_labels = np.unique(labels[labels != -1])
             tmp_h= np.zeros(len(u_labels))
-
-            if False:
-                pointcloud = numpy_array_to_pointcloud(tmp)
-                o3d.visualization.draw_geometries([pointcloud])
-                pointcloud = numpy_array_to_pointcloud(tmp[labels==0])
-                o3d.visualization.draw_geometries([pointcloud])
-                pointcloud = numpy_array_to_pointcloud(tmp[labels==1])
-                o3d.visualization.draw_geometries([pointcloud])
             
             #print(len(u_labels))
             if len(u_labels) == 1:
@@ -125,13 +113,7 @@ def find_high(n, speichern=False,histoz_vis= False, pc_vis=False):
                 # Find indices of rows in array1 that are not in array2
                 indices_to_keep = [i for i, row in enumerate(test_1) if row not in test_2]
                             
-                
-                
-            
-                
-                    
 
-                
                 h3 = tmp[labels==choosen_cluster][:,2]
                 max_h3= np.max(h3)
                 h3 = h3[h3 > max_h3- 0.0025]
@@ -141,45 +123,6 @@ def find_high(n, speichern=False,histoz_vis= False, pc_vis=False):
         except:
             print('Punktwolke '+ str(i+1) + ' nicht gefunden')
         
-
-
-        #visual
-        if histoz_vis:
-            plt.hist(z_part, bins=2000, edgecolor='black')
-            #plt.hist(ground_p, bins=2000, edgecolor='orange')
-            #plt.hist(f_z, bins=2000, edgecolor='black')
-            plt.title('Verteilung der Z-Achsen Höhenwerte')
-            plt.xlabel('Z Höhe')
-            plt.ylabel('Häufigkeit')
-            plt.grid(True)
-            plt.show()
-
-        
-
-
-        if pc_vis :
-            #pointcloud = numpy_array_to_pointcloud(data)
-            pointcloud = numpy_array_to_pointcloud(filtered_data)
-            #pointcloud = numpy_array_to_pointcloud(f_z)
-            #pointcloud = numpy_array_to_pointcloud(tmp)
-            #pointcloud = numpy_array_to_pointcloud(highs)
-            #pointcloud.estimate_normals()
-            #mesh, densities = o3d.geometry.TriangleMesh.create_from_point_cloud_poisson(pointcloud, depth=9, width=0, scale=1.1, linear_fit=False)
-
-            # Visualize the mesh
-            #o3d.visualization.draw_geometries([mesh])
-            # Visualize the point cloud
-            o3d.visualization.draw_geometries([pointcloud])
-    
-
-    if speichern:
-            labels=['Messblatte', 'Schmiedeteilhöhe', 'Dornhöhe']
-            index= index=np.arange(1,n+1,1)
-            df = pd.DataFrame(high, columns=labels, index=index)
-            df.to_excel('höhe_data.xlsx')
-            del high
-            print('save')
-
     return crop_pc, without_ground 
 
 if __name__ == "__main__":

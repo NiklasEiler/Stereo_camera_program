@@ -76,6 +76,7 @@ def get_folder_names(path):
 
 
 def trans_to_klasse_back(pred):
+    #transformiert quant oin quali
     pred[pred[:, 0] <= 25, 0] = 0
     pred[(pred[:, 0] > 25) & (pred[:, 0] < 75), 0] = 50
     pred[pred[:, 0] >= 75, 0] = 100
@@ -117,13 +118,13 @@ def image_and_data(image_folder, save_path, speichern_data, foldername, x=-1, y=
     size=len(os.listdir(image_folder))
     data=np.zeros((size,23)) 
     index=np.arange(1,size+1,1)
-
+    #über alle  dateien
     for filename in sorted(os.listdir(image_folder), key=natural_sort_key): 
-        
+        #wenn bild
         if filename.endswith('.jpg') or filename.endswith('.png'):
             image_path = os.path.join(image_folder, filename)
             image = cv2.imread(image_path)
-
+            #wenn bild richtig geladen
             if image is not None:
                 img_save_path=save_path + "/" + filename
                 print('###################################' + str(filename)+ '########################################')
@@ -171,7 +172,7 @@ def predection_daten_images(folder_names, data_path):
             pred_y_svm_pos[pred_y_svm_pos=='1']= 'rechts'
             pred_y_svm_pos[pred_y_svm_pos=='2']= 'schräg'
 
-            #save
+            #formatieren der ergebnisse
             res = pd.DataFrame(data=pred_y_rf, columns=columns_names[0:3])
             res['Position']=pred_y_svm_pos
             res.index= range(1, len(daten) + 1)
@@ -180,7 +181,7 @@ def predection_daten_images(folder_names, data_path):
             foldername= 'Vorhersagen_' + folder_name
             res.insert(0, 'Dateiname', filenames_predict)
             
-
+            #speichern
             if os.path.isfile('data.xlsx'):
                 with pd.ExcelWriter('data.xlsx', mode='a', engine='openpyxl') as writer:
                     if foldername in writer.book.sheetnames:
@@ -223,7 +224,7 @@ def find_high(pc_path, filename):
     mask_y = filtered_data[:, 1] <= threshold_y
     filtered_data = filtered_data[mask_y]
 
-            # KMeans Cluster on z values to finde ground 
+    # KMeans Cluster on z values to finde ground 
     z_data = filtered_data[:,2]
     n_clusters = 2
     initial_centroids = np.array([[np.max(z_data)], [np.min(z_data)]])
@@ -243,7 +244,8 @@ def find_high(pc_path, filename):
     ground_p = z_data[labels == ground_label]
     mask_z = filtered_data[:,2] < np.min(ground_p)
     filtered_data = filtered_data[mask_z]
-     
+    
+    #part high
     tmp = filtered_data.copy()
             
     mask_mod1= tmp[:,2] <= np.min(tmp[:,2]) + 0.001
@@ -264,7 +266,7 @@ def find_high(pc_path, filename):
             
     u_labels = np.unique(labels[labels != -1])
     tmp_h= np.zeros(len(u_labels))
-
+    #Cluster auswahl
     if len(u_labels) == 1:
         high[2] = ground_offset - np.mean(tmp[labels==0][:,2])
             
@@ -284,7 +286,7 @@ def find_high(pc_path, filename):
 
         # Find indices of rows in array1 that are not in array2
         indices_to_keep = [i for i, row in enumerate(test_1) if row not in test_2]
-                                    
+        #Dornhöhe                           
         h3 = tmp[labels==choosen_cluster][:,2]
         max_h3= np.max(h3)
         h3 = h3[h3 > max_h3- 0.0025]
@@ -293,6 +295,7 @@ def find_high(pc_path, filename):
     return high
 
 def save_high(high_data, filenames_high):
+    #speichern der high_data
     high_labels=['Abstand der Kamera zum Schamottstein', 'Schmiedeteilhöhe', 'Dornhöhe']
     size= len(filenames_high)
     index=np.arange(1,size+1,1)
@@ -313,7 +316,7 @@ def save_high(high_data, filenames_high):
             for i, col in enumerate(df.columns):
                 column_len = max(df[col].astype(str).map(len).max(), len(col)) + 2  # Add a little padding
                 worksheet.column_dimensions[worksheet.cell(1, i+1).column_letter].width = column_len
-    else:
+    else: #wenn keine excel datei da ist wird eine neue datei
         with pd.ExcelWriter('data.xlsx', engine='xlsxwriter') as writer:
             df.to_excel(writer, sheet_name=foldername, index=True)
             workbook = writer.book
@@ -351,6 +354,7 @@ def adjust_column_width(file_path):
     wb.save(filename=file_path)
 
 def main(x=650, y=400):
+    #pathe def.
     img_path= os.path.abspath(os.getcwd()) + '/Messung'
     save_path= os.path.abspath(os.getcwd()) + '/Messung'
     folder_path= save_path + "/Ergebnisse"
@@ -363,15 +367,16 @@ def main(x=650, y=400):
 
     # Create a new directory at the specified path
     os.makedirs(folder_path)
-
+    #Messungsordner durchgehen
     folder_names = get_folder_names(img_path)
     for folder_name in folder_names:
+        #Bildordner
         if folder_name != '3d' and folder_name != 'Ergebnisse':
             ip=img_path + "/" + str(folder_name)
             img_save= folder_path + "/" + folder_name
             os.makedirs(img_save)
             image_and_data(image_folder=ip  ,save_path=img_save, speichern_data=True, foldername=folder_name, x=x, y=y)
-        
+        #3d ordner
         if folder_name == '3d':
             high_data=[]
             filenames_high=[]
